@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F6EDDF">
+<title>Para ti, Hency ♥</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23A9603F' d='M12 21s-7.5-4.9-10-9.2C.4 8.5 2 5 5.4 5c2 0 3.4 1.1 4.2 2.5L12 10l2.4-2.5C15.2 6.1 16.6 5 18.6 5 22 5 23.6 8.5 22 11.8 19.5 16.1 12 21 12 21z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<noscript><style>.puerta{display:none}body{overflow:auto}</style></noscript>
+</head>
+<body>
+
+<!-- ══════ Pantalla de entrada ══════ -->
+<div class="puerta" id="puerta">
+  <div class="puerta-inner">
+    <svg class="corazon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 21s-7.5-4.9-10-9.2C.4 8.5 2 5 5.4 5c2 0 3.4 1.1 4.2 2.5L12 10l2.4-2.5C15.2 6.1 16.6 5 18.6 5 22 5 23.6 8.5 22 11.8 19.5 16.1 12 21 12 21z"/>
+    </svg>
+    <p class="puerta-frase">Para el amor de mi&nbsp;vida</p>
+    <button class="btn-pill" id="btnEntrar" type="button">Te amo, Hency</button>
+  </div>
+</div>
+
+<main class="pagina">
+
+  <header class="fecha rv">
+    <h1>1 de septiembre de 2025</h1>
+    <p class="fecha-sub">el día en que me dijiste que sí</p>
+  </header>
+
+  <section class="polaroid rv" aria-label="Nuestros recuerdos">
+    <div class="polaroid-marco">
+      <div class="carrusel" id="carrusel" tabindex="0"></div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <p class="nombres">Hency <span class="amp">&amp;</span> Jeanpierre</p>
+    </div>
+  </section>
+
+  <div class="divisor rv" aria-hidden="true">
+    <svg viewBox="0 0 120 24" fill="none">
+      <path id="squiggle" pathLength="1" d="M6 13 C 22 -1, 38 27, 54 13 S 86 -1, 102 13 S 112 18, 114 15"/>
+    </svg>
+  </div>
+
+  <section class="carta-seccion rv" aria-label="Una carta para ti">
+    <div class="carta" id="carta">
+      <div class="carta-pliegues" aria-hidden="true"></div>
+      <div class="solapa" aria-hidden="true"></div>
+      <button class="lacre" id="btnLacre" type="button" aria-label="Abrir la carta"><span>Descúbrelo</span></button>
+      <div class="carta-expande">
+        <div class="carta-recorte">
+          <div class="carta-texto">
+            <p>Mi Hency:</p>
+            <p>Hoy se cumple un año desde que me dijiste que sí. Aunque los dos sabemos que esta historia empezó antes: yo ya te quería desde antes de atreverme a pedírtelo.</p>
+            <p>Gracias por doce meses de risas, de planes, de abrazos que arreglan cualquier día. Contigo hasta lo más simple se vuelve mi lugar favorito.</p>
+            <p>Hoy celebro todo lo que hemos vivido, pero sobre todo, todo lo que aún nos queda por vivir. Porque si llegar hasta aquí ha sido así de bonito, no me alcanza la imaginación para todo lo que viene.</p>
+            <p class="carta-pregunta">¿Te gustaría seguir escribiendo nuestra&nbsp;historia?</p>
+            <div class="carta-accion">
+              <button class="btn-pill" id="btnSiQuiero" type="button">Sí, quiero <span class="cora">♥</span></button>
+              <p class="respuesta" id="respuesta">Sabía que dirías que sí ♥</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contador rv" id="contador" aria-label="Nuestro tiempo juntos">
+    <p class="contador-pre" id="contadorPre">Han sido los mejores</p>
+    <div class="contador-cifras" id="cifras"></div>
+    <p class="contador-post">de mi vida</p>
+  </section>
+
+  <section class="galeria" id="galeria" aria-label="Más recuerdos"></section>
+
+  <p class="cierre rv">Te elijo hoy, mañana y todos los días.</p>
+  <p class="firma rv">Jeanpierre</p>
+
+  <footer class="pie rv">Hecho con <span>♥</span> para Hency · 01.09.2025</footer>
+
+</main>
+
+<canvas id="lluvia" class="lluvia" aria-hidden="true"></canvas>
+
+<button class="musica" id="btnMusica" type="button" aria-label="Pausar o reanudar la música" hidden>
+  <span class="barra"></span><span class="barra"></span><span class="barra"></span>
+</button>
+<audio id="audio" src="cancion.mp3" loop preload="auto"></audio>
+
+<script src="app.js"></script>
+</body>
+</html>

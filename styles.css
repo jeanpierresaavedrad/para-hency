@@ -1,0 +1,301 @@
+/* ═══════════════════════════════════════════════════════════
+   Aniversario Hency & Jeanpierre — paleta medida de la referencia
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --fondo:      #F6EDDF;   /* crema general */
+  --fondo-hondo:#F0E3CE;   /* crema más profundo, degradado */
+  --papel:      #FDFAF3;   /* blanco cálido del polaroid */
+  --tinta:      #4F4033;   /* marrón oscuro de titulares */
+  --tinta-media:#6D5843;   /* texto de la carta */
+  --tinta-suave:#A98F71;   /* etiquetas, pie */
+  --terracota:  #A9603F;   /* acento principal */
+  --terracota-2:#8F4E33;   /* terracota profundo (botón) */
+  --dorado:     #EFD9A9;   /* papel del sobre */
+  --dorado-2:   #E2C588;   /* sombra del sobre */
+  --pliegue:    rgba(146,106,44,.28);
+  --lacre:      #9C2721;
+  --lacre-2:    #6E1411;
+  --linea:      #DCC9AC;
+  --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --script:'Great Vibes', 'Segoe Script', cursive;
+  --curva-salida:cubic-bezier(.22,1,.36,1);
+  --curva-tap:cubic-bezier(.23,1,.32,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--serif);
+  color:var(--tinta);
+  background:linear-gradient(180deg,var(--fondo) 0%,var(--fondo-hondo) 100%) fixed var(--fondo);
+  min-height:100vh;min-height:100dvh;
+  overflow:hidden; /* bloqueado hasta abrir la puerta */
+}
+body.abierta{overflow:auto;overflow-x:hidden}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;-webkit-tap-highlight-color:transparent}
+
+/* ══════ Pantalla de entrada ══════ */
+.puerta{
+  position:fixed;inset:0;z-index:100;
+  background:
+    radial-gradient(120% 90% at 50% 30%, #FAF3E7 0%, var(--fondo) 55%, var(--fondo-hondo) 100%);
+  display:grid;place-items:center;text-align:center;
+  padding:24px;
+}
+.puerta-inner{display:grid;justify-items:center;gap:26px;max-width:340px}
+.corazon{width:30px;height:30px;fill:var(--terracota)}
+.puerta-frase{
+  font-style:italic;font-weight:500;font-size:clamp(26px,7.4vw,32px);
+  line-height:1.25;color:#7C5B42;letter-spacing:.01em;
+  text-wrap:balance;
+}
+.puerta.fuera{opacity:0;visibility:hidden}
+
+/* ══════ Botón pill (entrada + "Sí, quiero") ══════ */
+.btn-pill{
+  padding:15px 38px;border-radius:999px;
+  background:linear-gradient(180deg,#B26A48 0%,var(--terracota-2) 100%);
+  color:#FBF1E4;font-style:italic;font-weight:600;font-size:19px;letter-spacing:.02em;
+  box-shadow:0 12px 26px -12px rgba(143,78,51,.6), inset 0 1px 0 rgba(255,240,220,.28);
+}
+.btn-pill .cora{font-style:normal}
+
+/* ══════ Contenido ══════ */
+.pagina{
+  max-width:440px;margin:0 auto;
+  padding:clamp(36px,10vw,56px) 22px 48px;
+  display:grid;gap:34px;
+}
+
+/* Fecha */
+.fecha{text-align:center;display:grid;gap:8px}
+.fecha h1{
+  font-style:italic;font-weight:500;font-size:clamp(27px,7.6vw,33px);
+  letter-spacing:.015em;color:var(--tinta);
+}
+.fecha-sub{font-style:italic;font-size:15px;color:var(--tinta-suave)}
+
+/* Polaroid + carrusel */
+.polaroid{display:grid;justify-items:center}
+.polaroid-marco{
+  width:100%;max-width:360px;
+  background:var(--papel);
+  padding:13px 13px 15px;border-radius:5px;
+  box-shadow:0 22px 44px -20px rgba(90,62,30,.38), 0 2px 8px rgba(90,62,30,.08);
+}
+.carrusel{
+  display:flex;overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  border-radius:3px;
+  scrollbar-width:none;
+}
+.carrusel::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:1/1.02;overflow:hidden}
+.slide img{width:100%;height:100%;object-fit:cover}
+.slide.vacia{background:linear-gradient(160deg,#F3E9D8,#EADDC5)}
+.vacia-inner{
+  height:100%;display:grid;place-content:center;justify-items:center;gap:10px;
+  text-align:center;padding:18px;
+}
+.vacia-inner svg{width:34px;height:34px;fill:none;stroke:var(--terracota);stroke-width:1.4;opacity:.7}
+.vacia-inner p{font-style:italic;font-size:16px;color:#8A6F58}
+.vacia-inner small{font-family:ui-monospace,Consolas,monospace;font-size:10.5px;letter-spacing:.04em;color:#B49A7C}
+.dots{display:flex;justify-content:center;gap:7px;padding:12px 0 8px}
+.dot{width:6px;height:6px;border-radius:50%;background:#DAC7AB;transition:background .2s var(--curva-tap)}
+.dot.activa{background:var(--terracota)}
+.nombres{
+  text-align:center;font-weight:600;font-size:21px;letter-spacing:.03em;color:var(--tinta);
+}
+.nombres .amp{font-style:italic;font-weight:500;color:var(--terracota);padding:0 2px}
+
+/* Divisor ondulado */
+.divisor{display:grid;place-items:center;margin:-6px 0}
+.divisor svg{width:110px;height:22px}
+#squiggle{stroke:var(--terracota);stroke-width:2.6;stroke-linecap:round}
+
+/* ══════ La carta / sobre ══════ */
+.carta-seccion{display:grid;justify-items:center}
+.carta{
+  position:relative;width:100%;max-width:380px;
+  min-height:216px;
+  background:linear-gradient(165deg,var(--dorado) 0%,var(--dorado-2) 100%);
+  border-radius:10px;
+  box-shadow:0 20px 42px -18px rgba(110,75,25,.42);
+  perspective:900px;
+}
+/* Pliegues en X, esquina a esquina (como la referencia) */
+.carta-pliegues{
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    linear-gradient(to top right, transparent calc(50% - .7px), var(--pliegue) calc(50% - .7px), var(--pliegue) calc(50% + .7px), transparent calc(50% + .7px)),
+    linear-gradient(to top left,  transparent calc(50% - .7px), var(--pliegue) calc(50% - .7px), var(--pliegue) calc(50% + .7px), transparent calc(50% + .7px));
+  opacity:.6;
+}
+/* Solapa superior del sobre */
+.solapa{
+  position:absolute;left:0;right:0;top:0;height:58%;
+  clip-path:polygon(0 0, 100% 0, 50% 100%);
+  background:linear-gradient(180deg,#F2DFAF 0%,#E3C98E 88%,#D9BC7C 100%);
+  border-radius:10px 10px 0 0;
+  transform-origin:top center;
+  filter:drop-shadow(0 3px 3px rgba(120,85,30,.18));
+  z-index:2;
+}
+.carta.abierta .solapa{transform:rotateX(-160deg);opacity:0}
+/* Sello de lacre */
+.lacre{
+  position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);
+  width:92px;height:92px;border-radius:50%;z-index:3;
+  background:radial-gradient(circle at 35% 28%, #BC443A 0%, var(--lacre) 52%, var(--lacre-2) 100%);
+  box-shadow:
+    0 10px 20px -8px rgba(110,20,17,.55),
+    inset 0 2px 4px rgba(255,190,170,.35),
+    inset 0 -4px 8px rgba(60,8,6,.45);
+  display:grid;place-items:center;
+}
+.lacre::after{
+  content:"";position:absolute;inset:9px;border-radius:50%;
+  border:1.5px solid rgba(255,205,180,.32);
+}
+.lacre span{
+  font-style:italic;font-weight:600;font-size:15px;color:#F3D9B0;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.carta.abierta .lacre{transform:translate(-50%,-50%) scale(.5);opacity:0;pointer-events:none}
+/* Contenido expandible */
+.carta-expande{display:grid;grid-template-rows:0fr}
+.carta.abierta .carta-expande{grid-template-rows:1fr}
+.carta-recorte{overflow:hidden;min-height:0}
+.carta-texto{
+  padding:30px 26px 34px;position:relative;z-index:1;
+  display:grid;gap:16px;
+  font-size:17.5px;line-height:1.65;font-weight:500;font-style:italic;
+  color:var(--tinta-media);
+  opacity:0;
+}
+.carta.abierta .carta-texto{opacity:1}
+.carta-pregunta{
+  margin-top:14px;text-align:center;
+  font-weight:600;font-size:23px;line-height:1.35;color:#7A5233;
+  text-wrap:balance;
+}
+.carta-accion{display:grid;justify-items:center;gap:14px;margin-top:6px}
+#btnSiQuiero:disabled{opacity:.85;cursor:default}
+.respuesta{
+  font-style:italic;font-size:16px;color:var(--terracota);
+  opacity:0;transform:translateY(6px);
+}
+.respuesta.visible{opacity:1;transform:none}
+
+/* ══════ Contador ══════ */
+.contador{text-align:center;display:grid;gap:14px;padding:10px 0}
+.contador-pre,.contador-post{font-style:italic;font-weight:500;font-size:22px;color:var(--tinta)}
+.contador-cifras{display:flex;justify-content:center;gap:34px}
+.cifra{display:grid;gap:4px;justify-items:center}
+.cifra .num{
+  font-weight:600;font-size:48px;line-height:1;color:var(--tinta);
+  font-variant-numeric:lining-nums tabular-nums;
+}
+.cifra .uni{
+  font-family:var(--serif);font-size:10.5px;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--tinta-suave);
+}
+
+/* ══════ Galería final ══════ */
+.galeria{display:grid;gap:18px}
+.galeria .foto{border-radius:14px;overflow:hidden;box-shadow:0 18px 36px -18px rgba(90,62,30,.35)}
+.galeria .foto img{width:100%}
+.galeria .foto.vacia{aspect-ratio:4/3;background:linear-gradient(160deg,#F3E9D8,#EADDC5)}
+
+/* Cierre y firma */
+.cierre{text-align:center;font-style:italic;font-weight:500;font-size:22px;color:var(--tinta);text-wrap:balance}
+.firma{text-align:center;font-family:var(--script);font-size:40px;color:var(--terracota);margin-top:-18px}
+.pie{
+  text-align:center;font-size:11px;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--tinta-suave);
+  padding-top:8px;
+}
+.pie span{color:var(--terracota)}
+
+/* ══════ Lluvia de corazones ══════ */
+.lluvia{position:fixed;inset:0;z-index:55;pointer-events:none;display:none}
+.lluvia.activa{display:block}
+
+/* ══════ Botón de música ══════ */
+.musica[hidden]{display:none}
+.musica{
+  position:fixed;right:16px;bottom:16px;z-index:60;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--papel);border:1px solid var(--linea);
+  box-shadow:0 8px 18px -8px rgba(90,62,30,.4);
+  display:flex;align-items:flex-end;justify-content:center;gap:3px;
+  padding-bottom:15px;
+}
+.musica .barra{width:3px;height:6px;border-radius:2px;background:var(--terracota)}
+.musica .barra:nth-child(2){height:11px}
+.musica .barra:nth-child(3){height:8px}
+
+/* ═══════════════════════════════════════════════════════════
+   Movimiento — todo tras la puerta de prefers-reduced-motion
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: no-preference){
+
+  .puerta{transition:opacity .7s var(--curva-salida), visibility 0s linear .7s}
+  .corazon{animation:latido 1.9s ease-in-out infinite;transform-origin:center}
+  @keyframes latido{
+    0%,100%{transform:scale(1)}
+    12%{transform:scale(1.14)}
+    24%{transform:scale(1)}
+    36%{transform:scale(1.08)}
+    52%{transform:scale(1)}
+  }
+
+  .btn-pill{transition:transform .15s var(--curva-tap), box-shadow .15s var(--curva-tap)}
+  .btn-pill:active{transform:scale(.965)}
+  .lacre{transition:transform .3s var(--curva-tap), opacity .3s var(--curva-tap)}
+  .lacre:active{transform:translate(-50%,-50%) scale(.94)}
+
+  /* Revelado al hacer scroll: la ocultación SOLO existe con JS + movimiento */
+  .js-revela .rv{opacity:0;transform:translateY(16px);
+    transition:opacity .6s var(--curva-salida), transform .6s var(--curva-salida)}
+  .js-revela .rv.visto{opacity:1;transform:none}
+  .js-revela .polaroid{transition-delay:.08s}
+  .js-revela .fecha-sub{transition-delay:.05s}
+
+  /* Squiggle que se dibuja */
+  .js-revela #squiggle{stroke-dasharray:1;stroke-dashoffset:1}
+  .js-revela .divisor.visto #squiggle{
+    transition:stroke-dashoffset 1s var(--curva-salida) .15s;
+    stroke-dashoffset:0;
+  }
+
+  /* Apertura del sobre */
+  .solapa{transition:transform .85s var(--curva-salida), opacity .3s ease .5s}
+  .carta.abierta .lacre{transition:transform .45s var(--curva-tap), opacity .45s var(--curva-tap)}
+  .carta-expande{transition:grid-template-rows .85s var(--curva-salida)}
+  .carta-texto{transition:opacity .7s var(--curva-salida) .35s}
+
+  .respuesta{transition:opacity .5s var(--curva-salida) .15s, transform .5s var(--curva-salida) .15s}
+
+  .musica .barra{animation:ecualizador 1.1s ease-in-out infinite paused}
+  .musica.sonando .barra{animation-play-state:running}
+  .musica .barra:nth-child(2){animation-delay:.18s}
+  .musica .barra:nth-child(3){animation-delay:.36s}
+  @keyframes ecualizador{
+    0%,100%{height:6px}
+    50%{height:14px}
+  }
+}
+
+/* Sin movimiento: el sobre se abre al instante, nada queda oculto */
+@media (prefers-reduced-motion: reduce){
+  .puerta.fuera{display:none}
+}
+
+/* Pantallas muy angostas */
+@media (max-width:360px){
+  .pagina{padding-left:18px;padding-right:18px}
+  .contador-cifras{gap:24px}
+  .cifra .num{font-size:42px}
+}
