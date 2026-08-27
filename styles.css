@@ -51,6 +51,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   text-wrap:balance;
 }
 .puerta.fuera{opacity:0;visibility:hidden}
+.aviso-volumen[hidden]{display:none}
+.aviso-volumen{
+  display:flex;align-items:center;gap:7px;
+  margin-top:-6px;
+  font-style:italic;font-size:14.5px;color:var(--tinta-suave);
+  opacity:0;
+}
+.aviso-volumen svg{
+  width:15px;height:15px;flex:none;
+  fill:none;stroke:var(--tinta-suave);stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.aviso-volumen.visible{opacity:1}
 
 /* ══════ Botón pill (entrada + "Sí, quiero") ══════ */
 .btn-pill{
@@ -250,6 +263,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     36%{transform:scale(1.08)}
     52%{transform:scale(1)}
   }
+
+  /* el aviso llega tarde y en calma: informa, no reclama */
+  .aviso-volumen{transition:opacity .9s var(--curva-salida)}
 
   .btn-pill{transition:transform .15s var(--curva-tap), box-shadow .15s var(--curva-tap)}
   .btn-pill:active{transform:scale(.965)}

@@ -36,8 +36,24 @@ $('#btnEntrar').addEventListener('click', () => {
 });
 
 /* ═══════ Música ═══════ */
-audio.addEventListener('canplaythrough', () => { btnMusica.hidden = false; }, { once: true });
-audio.addEventListener('error', () => { btnMusica.hidden = true; });
+const avisoVolumen = $('#avisoVolumen');
+
+// Con preload="auto" el audio puede estar listo ANTES de que corra este script: si solo
+// escucháramos el evento, no se dispararía nunca. Por eso se consulta también el estado actual.
+function cuandoAudio(nivel, evento, fn) {
+  if (audio.readyState >= nivel) { fn(); return; }
+  audio.addEventListener(evento, fn, { once: true });
+}
+
+// El aviso solo aparece si la canción existe de verdad, y llega sin prisa:
+// si su celular está en silencio, esto es lo único que evita que se pierda la canción.
+cuandoAudio(1, 'loadedmetadata', () => {
+  if (entrado) return;
+  avisoVolumen.hidden = false;
+  requestAnimationFrame(() => setTimeout(() => avisoVolumen.classList.add('visible'), 900));
+});
+cuandoAudio(4, 'canplaythrough', () => { btnMusica.hidden = false; });
+audio.addEventListener('error', () => { btnMusica.hidden = true; avisoVolumen.hidden = true; });
 function setMusica(on) { btnMusica.classList.toggle('sonando', on); }
 btnMusica.addEventListener('click', () => {
   if (audio.paused) audio.play().then(() => setMusica(true)).catch(() => {});
