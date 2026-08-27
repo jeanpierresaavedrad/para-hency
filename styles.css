@@ -91,7 +91,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   scrollbar-width:none;
 }
 .carrusel::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:1/1.02;overflow:hidden}
+.slide{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/5;overflow:hidden}
 .slide img{width:100%;height:100%;object-fit:cover}
 .slide.vacia{background:linear-gradient(160deg,#F3E9D8,#EADDC5)}
 .vacia-inner{

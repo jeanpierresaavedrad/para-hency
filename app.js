@@ -2,8 +2,18 @@
 
 /* ═══════ CONFIGURACIÓN — edita aquí ═══════ */
 const FECHA_INICIO = new Date(2025, 8, 1); // 1 de septiembre de 2025 (mes 8 = septiembre)
-const FOTOS = ['fotos/1.jpg', 'fotos/2.jpg', 'fotos/3.jpg', 'fotos/4.jpg'];   // carrusel polaroid
-const FOTOS_GALERIA = ['fotos/5.jpg', 'fotos/6.jpg'];                          // fotos grandes del final
+const FOTOS = [                        // carrusel polaroid
+  { src: 'fotos/1.jpg', alt: 'Un beso en el carro' },
+  { src: 'fotos/2.jpg', alt: 'En la moto, con los brazos abiertos' },
+  { src: 'fotos/3.jpg', alt: 'Con una nota escrita a mano, en las montañas' },
+  { src: 'fotos/4.jpg', alt: 'Un beso entre globos de corazón' },
+  { src: 'fotos/5.jpg', alt: 'En la playa, entre las rocas' },
+  { src: 'fotos/6.jpg', alt: 'Una cena con velas' },
+];
+const FOTOS_GALERIA = [                // fotos grandes del final
+  { src: 'fotos/g1.jpg', alt: 'Juntos en la playa al atardecer' },
+  { src: 'fotos/g2.jpg', alt: 'Nuestras manos frente al atardecer' },
+];
 
 const $ = s => document.querySelector(s);
 const conMovimiento = matchMedia('(prefers-reduced-motion: no-preference)').matches;
@@ -41,12 +51,13 @@ const dots = $('#dots');
 const corazonContorno =
   '<svg viewBox="0 0 24 24"><path d="M12 20.5s-7-4.6-9.3-8.6C1.2 9 2.7 5.8 5.8 5.8c1.8 0 3.1 1 3.9 2.3L12 10l2.3-1.9c.8-1.3 2.1-2.3 3.9-2.3 3.1 0 4.6 3.2 3.1 6.1C19 15.9 12 20.5 12 20.5z"/></svg>';
 
-FOTOS.forEach((src, i) => {
+FOTOS.forEach(({ src, alt }, i) => {
   const slide = document.createElement('div');
   slide.className = 'slide';
   const img = new Image();
-  img.alt = 'Recuerdo ' + (i + 1);
+  img.alt = alt;
   img.decoding = 'async';
+  img.fetchPriority = i === 0 ? 'high' : 'low';
   img.onerror = () => {
     slide.classList.add('vacia');
     slide.innerHTML =
@@ -68,12 +79,13 @@ carrusel.addEventListener('scroll', () => {
 
 /* ═══════ Galería final ═══════ */
 const galeria = $('#galeria');
-FOTOS_GALERIA.forEach((src, i) => {
+FOTOS_GALERIA.forEach(({ src, alt }) => {
   const foto = document.createElement('div');
   foto.className = 'foto rv';
   const img = new Image();
-  img.alt = 'Nosotros ' + (i + 1);
+  img.alt = alt;
   img.loading = 'lazy';
+  img.decoding = 'async';
   img.onerror = () => {
     foto.classList.add('vacia');
     foto.innerHTML =
