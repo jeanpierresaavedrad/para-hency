@@ -32,6 +32,7 @@ $('#btnEntrar').addEventListener('click', () => {
   puerta.classList.add('fuera');
   document.body.classList.add('abierta');
   setTimeout(iniciaReveals, 250);
+  armaRedesSorpresa();
   setTimeout(() => puerta.remove(), 900);
 });
 
@@ -134,7 +135,10 @@ $('#btnSiQuiero').addEventListener('click', function () {
 const sorpresa = $('#sorpresa');
 const audio2 = $('#audio2');
 
+let sorpresaRevelada = false;
 function revelaBotonSorpresa() {
+  if (sorpresaRevelada) return;
+  sorpresaRevelada = true;
   sorpresa.hidden = false;
   audio2.preload = 'auto';          // recién ahora vale la pena bajar la segunda canción
   audio2.load();
@@ -168,6 +172,31 @@ function cruzaCanciones(ms = 1600) {
     // Garantía final: pase lo que pase, el estado correcto se aplica igual.
     setTimeout(() => { clearInterval(id); cierra(); }, ms + 500);
   }).catch(() => { /* sin el mp3, la sorpresa se abre igual y sigue sonando la primera */ });
+}
+
+// Red de seguridad TRIPLE. La sorpresa vive al final de la página y es el regalo:
+// que ella no la vea sería el peor fallo posible. Por eso no se confía en un solo
+// disparador. IntersectionObserver no corre si la pestaña no está componiendo, y el
+// scroll puede desviarse cuando el body lleva overflow recortado.
+function armaRedesSorpresa() {
+  // 1) el observador, cuando llega a la galería
+  if ('IntersectionObserver' in window) {
+    const vigia = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) { revelaBotonSorpresa(); vigia.disconnect(); }
+    }, { rootMargin: '0px 0px -20% 0px' });
+    vigia.observe($('#galeria'));
+  }
+  // 2) el scroll en captura, por si el observador no dispara
+  const alBajar = () => {
+    const de = document.documentElement;
+    if (de.scrollTop + de.clientHeight > de.scrollHeight - 900) {
+      revelaBotonSorpresa();
+      document.removeEventListener('scroll', alBajar, { capture: true });
+    }
+  };
+  document.addEventListener('scroll', alBajar, { capture: true, passive: true });
+  // 3) el respaldo de tiempo: pase lo que pase, a los 45 segundos el botón existe
+  setTimeout(revelaBotonSorpresa, 45000);
 }
 
 $('#btnSorpresa').addEventListener('click', function () {
