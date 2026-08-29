@@ -54,10 +54,11 @@ cuandoAudio(1, 'loadedmetadata', () => {
 });
 cuandoAudio(4, 'canplaythrough', () => { btnMusica.hidden = false; });
 audio.addEventListener('error', () => { btnMusica.hidden = true; avisoVolumen.hidden = true; });
+let musicaActiva = audio;   // cambia a la de Los Cafres cuando se abre la sorpresa
 function setMusica(on) { btnMusica.classList.toggle('sonando', on); }
 btnMusica.addEventListener('click', () => {
-  if (audio.paused) audio.play().then(() => setMusica(true)).catch(() => {});
-  else { audio.pause(); setMusica(false); }
+  if (musicaActiva.paused) musicaActiva.play().then(() => setMusica(true)).catch(() => {});
+  else { musicaActiva.pause(); setMusica(false); }
 });
 
 /* ═══════ Carrusel polaroid ═══════ */
@@ -124,9 +125,55 @@ $('#btnSiQuiero').addEventListener('click', function () {
   this.disabled = true;
   $('#respuesta').classList.add('visible');
   iniciaLluvia();
-  setTimeout(() => {
-    $('#contador').scrollIntoView({ behavior: conMovimiento ? 'smooth' : 'auto', block: 'center' });
-  }, 1100);
+  // La sorpresa no se anuncia: aparece sola unos segundos después, cuando ella
+  // ya cree que la página terminó.
+  setTimeout(revelaBotonSorpresa, 2600);
+});
+
+/* ═══════ La sorpresa del concierto ═══════ */
+const sorpresa = $('#sorpresa');
+const audio2 = $('#audio2');
+
+function revelaBotonSorpresa() {
+  sorpresa.hidden = false;
+  audio2.preload = 'auto';          // recién ahora vale la pena bajar la segunda canción
+  audio2.load();
+  // setTimeout y no rAF: si la pestaña no está componiendo, rAF no corre y el botón
+  // se quedaría invisible para siempre.
+  setTimeout(() => sorpresa.classList.add('lista'), 60);
+}
+
+// Cruce entre canciones: una baja mientras la otra sube. Si el mp3 de Los Cafres
+// todavía no existe, la sorpresa igual se abre y la canción de siempre sigue sonando.
+function cruzaCanciones(ms = 1600) {
+  const vol0 = audio.volume;
+  const cierra = () => { audio.pause(); audio.volume = vol0; audio2.volume = 1; };
+
+  audio2.volume = 0;
+  const arranque = audio2.play();
+  if (!arranque) { cierra(); return; }
+
+  arranque.then(() => {
+    musicaActiva = audio2;
+    setMusica(true);
+    const t0 = Date.now();
+    // Con temporizador, no con rAF: si ella bloquea el celular o cambia de app a mitad
+    // del cruce, rAF se congela y quedarían las dos canciones en un estado roto.
+    const id = setInterval(() => {
+      const k = Math.min((Date.now() - t0) / ms, 1);
+      audio.volume = vol0 * (1 - k);
+      audio2.volume = k;
+      if (k >= 1) { clearInterval(id); cierra(); }
+    }, 40);
+    // Garantía final: pase lo que pase, el estado correcto se aplica igual.
+    setTimeout(() => { clearInterval(id); cierra(); }, ms + 500);
+  }).catch(() => { /* sin el mp3, la sorpresa se abre igual y sigue sonando la primera */ });
+}
+
+$('#btnSorpresa').addEventListener('click', function () {
+  this.disabled = true;
+  sorpresa.classList.add('abierta');
+  cruzaCanciones();
 });
 
 /* ═══════ Contador en vivo ═══════ */
@@ -172,10 +219,15 @@ const vista = new URLSearchParams(location.search).get('vista');
 if (vista) {
   document.getElementById('btnEntrar').click();
   document.querySelectorAll('.rv').forEach(e => e.classList.add('visto'));
-  if (vista === 'abierta') {
+  if (vista === 'abierta' || vista === 'sorpresa') {
     carta.classList.add('abierta');
     document.getElementById('btnLacre').disabled = true;
     document.getElementById('respuesta').classList.add('visible');
+  }
+  if (vista === 'sorpresa') {
+    sorpresa.hidden = false;
+    sorpresa.classList.add('lista', 'abierta');
+    document.getElementById('btnSorpresa').disabled = true;
   }
 }
 
