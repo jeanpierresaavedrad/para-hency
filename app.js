@@ -157,11 +157,12 @@ $('#btnLacre').addEventListener('click', () => {
 /* ═══════ "Sí, quiero" ═══════ */
 $('#btnSiQuiero').addEventListener('click', function () {
   this.disabled = true;
-  $('#respuesta').classList.add('visible');
   iniciaLluvia();
-  // La sorpresa no se anuncia: aparece sola unos segundos después, cuando ella
-  // ya cree que la página terminó.
-  setTimeout(revelaBotonSorpresa, 2600);
+  // Dice que sí, caen los corazones, y la página la lleva hasta la sorpresa.
+  setTimeout(() => {
+    revelaBotonSorpresa();
+    sorpresa.scrollIntoView({ behavior: conMovimiento ? 'smooth' : 'auto', block: 'center' });
+  }, 1500);
 });
 
 /* ═══════ La sorpresa del concierto ═══════ */
@@ -232,10 +233,28 @@ function armaRedesSorpresa() {
   setTimeout(revelaBotonSorpresa, 45000);
 }
 
-$('#btnSorpresa').addEventListener('click', function () {
+// PASO 1 -> 2: suena Los Cafres y aparece el botón del regalo.
+$('#btnReproducir').addEventListener('click', function () {
+  this.disabled = true;
+  sorpresa.classList.add('sonando');
+  cruzaCanciones();
+  // La imagen del concierto se baja ahora, para que el regalo abra sin esperas.
+  $('#imgConcierto').src = 'concierto.jpg';
+  // Un respiro para que reconozca la canción antes de ofrecerle el regalo.
+  setTimeout(() => {
+    const p2 = $('#paso2');
+    p2.hidden = false;
+    setTimeout(() => p2.classList.add('lista'), 60);
+  }, 2600);
+});
+
+// PASO 2 -> 3: se abre el regalo.
+$('#btnRegalo').addEventListener('click', function () {
   this.disabled = true;
   sorpresa.classList.add('abierta');
-  cruzaCanciones();
+  setTimeout(() => {
+    $('.sorpresa-texto').scrollIntoView({ behavior: conMovimiento ? 'smooth' : 'auto', block: 'center' });
+  }, 700);
 });
 
 /* ═══════ Contador en vivo ═══════ */
@@ -276,7 +295,7 @@ function iniciaReveals() {
   els.forEach(e => io.observe(e));
 }
 
-/* ═══════ Atajo de revisión (solo con ?vista=sobre|abierta en la URL) ═══════ */
+/* ═══════ Atajo de revisión: ?vista=sobre|abierta|paso1|paso2|sorpresa ═══════ */
 const vista = new URLSearchParams(location.search).get('vista');
 if (vista) {
   document.getElementById('btnEntrar').click();
@@ -284,12 +303,20 @@ if (vista) {
   if (vista === 'abierta' || vista === 'sorpresa') {
     carta.classList.add('abierta');
     document.getElementById('btnLacre').disabled = true;
-    document.getElementById('respuesta').classList.add('visible');
+  }
+  // ?vista=paso1 | paso2 | sorpresa — para revisar cada escalón sin tocar nada
+  if (vista === 'paso1' || vista === 'paso2' || vista === 'sorpresa') {
+    sorpresa.hidden = false;
+    sorpresa.classList.add('lista');
+  }
+  if (vista === 'paso2' || vista === 'sorpresa') {
+    sorpresa.classList.add('sonando');
+    const p2 = document.getElementById('paso2');
+    p2.hidden = false; p2.classList.add('lista');
   }
   if (vista === 'sorpresa') {
-    sorpresa.hidden = false;
-    sorpresa.classList.add('lista', 'abierta');
-    document.getElementById('btnSorpresa').disabled = true;
+    sorpresa.classList.add('abierta');
+    document.getElementById('imgConcierto').src = 'concierto.jpg';
   }
 }
 
