@@ -105,6 +105,26 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   padding:13px 13px 15px;border-radius:5px;
   box-shadow:0 22px 44px -20px rgba(90,62,30,.38), 0 2px 8px rgba(90,62,30,.08);
 }
+.carrusel-caja{position:relative}
+/* Flechas: le dicen que hay más fotos y sirven para pasarlas. Discretas sobre la
+   foto, con fondo claro para que se vean sobre cualquier imagen. */
+.nav-foto{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;   /* 44px: el minimo comodo para el dedo */
+  background:rgba(253,250,243,.88);
+  box-shadow:0 3px 10px rgba(60,40,20,.28);
+  display:grid;place-items:center;
+  z-index:2;
+}
+.nav-foto.izq{left:9px}
+.nav-foto.der{right:9px}
+.nav-foto svg{
+  width:21px;height:21px;fill:none;stroke:var(--terracota);
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+}
+.nav-foto.izq svg{margin-right:2px}
+.nav-foto.der svg{margin-left:2px}
+
 .carrusel{
   display:flex;overflow-x:auto;
   scroll-snap-type:x mandatory;
@@ -395,6 +415,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
   /* el aviso llega tarde y en calma: informa, no reclama */
   .aviso-volumen{transition:opacity .9s var(--curva-salida)}
+
+  .nav-foto{transition:transform .15s var(--curva-tap), background .15s var(--curva-tap)}
+  .nav-foto:active{transform:translateY(-50%) scale(.9)}
 
   .btn-pill{transition:transform .15s var(--curva-tap), box-shadow .15s var(--curva-tap)}
   .btn-pill:active{transform:scale(.965)}

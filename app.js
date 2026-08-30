@@ -15,6 +15,10 @@ const FOTOS_GALERIA = [                // fotos grandes del final
   { src: 'fotos/g2.jpg', alt: 'Nuestras manos frente al atardecer' },
 ];
 
+// El navegador restaura la posición de scroll al recargar. Como la página arranca
+// bloqueada, al abrirla saltaba a media carta en vez de empezar por las fotos.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
 const $ = s => document.querySelector(s);
 const conMovimiento = matchMedia('(prefers-reduced-motion: no-preference)').matches;
 if (conMovimiento) document.documentElement.classList.add('js-revela');
@@ -38,6 +42,7 @@ $('#btnEntrar').addEventListener('click', () => {
 
   puerta.classList.add('fuera');
   document.body.classList.add('abierta');
+  window.scrollTo(0, 0);          // que empiece por las fotos, siempre
   setTimeout(iniciaReveals, 250);
   armaRedesSorpresa();
   setTimeout(() => puerta.remove(), 900);
@@ -112,6 +117,18 @@ FOTOS.forEach(({ src, alt }, i) => {
   dot.className = 'dot' + (i === 0 ? ' activa' : '');
   dots.appendChild(dot);
 });
+
+// Flechas del carrusel. Dan la vuelta al llegar al final para que nunca se atasque.
+function pasaFoto(dir) {
+  const ancho = carrusel.clientWidth;
+  const i = Math.round(carrusel.scrollLeft / ancho);
+  let destino = i + dir;
+  if (destino < 0) destino = FOTOS.length - 1;
+  if (destino > FOTOS.length - 1) destino = 0;
+  carrusel.scrollTo({ left: destino * ancho, behavior: conMovimiento ? 'smooth' : 'auto' });
+}
+$('#navIzq').addEventListener('click', () => pasaFoto(-1));
+$('#navDer').addEventListener('click', () => pasaFoto(1));
 
 carrusel.addEventListener('scroll', () => {
   const i = Math.round(carrusel.scrollLeft / carrusel.clientWidth);
