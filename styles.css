@@ -48,7 +48,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .puerta-inner{display:grid;justify-items:center;gap:26px;max-width:340px}
 .corazon{width:30px;height:30px;fill:var(--terracota)}
 .puerta-frase{
-  font-style:italic;font-weight:500;font-size:clamp(26px,7.4vw,32px);
+  font-style:italic;font-weight:500;font-size:clamp(28px,8vw,35px);
   line-height:1.25;color:#7C5B42;letter-spacing:.01em;
   text-wrap:balance;
 }
@@ -57,7 +57,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .aviso-volumen{
   display:flex;align-items:center;gap:7px;
   margin-top:-6px;
-  font-style:italic;font-size:14.5px;color:var(--tinta-suave);
+  font-style:italic;font-size:16px;color:var(--tinta-suave);
   opacity:0;
 }
 .aviso-volumen svg{
@@ -69,9 +69,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ══════ Botón pill (entrada + "Sí, quiero") ══════ */
 .btn-pill{
-  padding:15px 38px;border-radius:999px;
+  padding:16px 40px;border-radius:999px;
   background:linear-gradient(180deg,#B26A48 0%,var(--terracota-2) 100%);
-  color:#FBF1E4;font-style:italic;font-weight:600;font-size:19px;letter-spacing:.02em;
+  color:#FBF1E4;font-style:italic;font-weight:600;font-size:21px;letter-spacing:.02em;
   box-shadow:0 12px 26px -12px rgba(143,78,51,.6), inset 0 1px 0 rgba(255,240,220,.28);
 }
 /* El corazón del botón va en SU celeste. Sobre el terracota hace falta el tono
@@ -92,10 +92,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* Fecha */
 .fecha{text-align:center;display:grid;gap:8px}
 .fecha h1{
-  font-style:italic;font-weight:500;font-size:clamp(27px,7.6vw,33px);
+  font-style:italic;font-weight:500;font-size:clamp(29px,8.2vw,36px);
   letter-spacing:.015em;color:var(--tinta);
 }
-.fecha-sub{font-style:italic;font-size:15px;color:var(--tinta-suave)}
+.fecha-sub{font-style:italic;font-size:16.5px;color:var(--tinta-suave)}
 
 /* Polaroid + carrusel */
 .polaroid{display:grid;justify-items:center}
@@ -126,9 +126,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .dot{width:6px;height:6px;border-radius:50%;background:#DAC7AB;transition:background .2s var(--curva-tap)}
 .dot.activa{background:var(--terracota)}
 .nombres{
-  text-align:center;font-weight:600;font-size:21px;letter-spacing:.03em;color:var(--tinta);
+  text-align:center;font-weight:600;font-size:23.5px;letter-spacing:.03em;color:var(--tinta);
 }
-.nombres .amp{font-style:italic;font-weight:500;color:var(--terracota);padding:0 2px}
+.nombres .cora-celeste{color:var(--celeste);font-weight:400;padding-left:4px;
+  text-shadow:0 1px 1px rgba(40,90,120,.16)}
 
 /* Divisor ondulado */
 .divisor{display:grid;place-items:center;margin:-6px 0}
@@ -257,11 +258,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .sorpresa.sonando #paso1{opacity:0;transform:translateY(-6px);pointer-events:none;height:0;overflow:hidden}
 
 .sabia{
-  font-family:var(--script);font-size:31px;line-height:1.2;color:var(--terracota);
+  font-family:var(--script);font-size:34px;line-height:1.2;color:var(--terracota);
 }
 .sabia .cora{font-family:var(--serif);font-size:22px;vertical-align:2px;color:var(--celeste)}
 .algo-mas{
-  font-style:italic;font-weight:500;font-size:21px;color:var(--tinta);
+  font-style:italic;font-weight:500;font-size:23px;color:var(--tinta);
   text-wrap:balance;margin-top:-4px;
 }
 /* El botón de reproducir lleva su triángulo: se lee como "dale play", no como "continuar". */
@@ -270,15 +271,32 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 #paso2{opacity:0;transform:translateY(10px);margin-top:4px}
 #paso2.lista{opacity:1;transform:none}
-.suena{font-style:italic;font-size:17px;color:var(--tinta-suave)}
+.suena{font-style:italic;font-size:19px;color:var(--tinta-suave)}
+/* Mientras corre la cuenta atrás el botón está apagado y no invita a tocarlo;
+   al llegar a cero recupera su color y su sombra. */
+#btnRegalo:disabled{
+  opacity:.5;cursor:default;
+  font-variant-numeric:tabular-nums;
+  box-shadow:0 6px 14px -8px rgba(143,78,51,.4);
+}
+#btnRegalo.listo{opacity:1}
 .sorpresa.abierta #paso2{opacity:0;transform:translateY(-6px);pointer-events:none;height:0;overflow:hidden;margin:0}
 
 /* La foto del concierto abre el regalo: es lo primero que ve. */
 .concierto{
-  width:100%;height:auto;aspect-ratio:980/653;object-fit:cover;
+  width:100%;height:auto;
   border-radius:9px;margin-bottom:6px;
   box-shadow:0 14px 30px -14px rgba(60,40,20,.55);
   background:#2A2622;
+}
+
+/* La entrada de verdad, con su nombre: cierra el regalo. Sin proporción forzada
+   ni recorte — solo ancho al 100% y que la altura salga sola. */
+.entrada{
+  width:100%;height:auto;
+  border-radius:9px;margin-top:14px;
+  box-shadow:0 14px 30px -14px rgba(60,40,20,.45);
+  background:#EDE6DA;
 }
 .sorpresa-expande{display:grid;grid-template-rows:0fr;width:100%;justify-items:center;margin-top:0}
 .sorpresa.abierta .sorpresa-expande{grid-template-rows:1fr}
@@ -296,7 +314,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 .sorpresa.abierta .sorpresa-texto{opacity:1}
 .sorpresa-texto p{
-  font-style:italic;font-weight:500;font-size:19px;line-height:1.45;color:var(--tinta-media);
+  font-style:italic;font-weight:500;font-size:21px;line-height:1.45;color:var(--tinta-media);
 }
 .sorpresa-nota{display:grid;place-items:center;margin-bottom:2px}
 .sorpresa-nota svg{
@@ -304,25 +322,25 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
 }
 .sorpresa-remate{
-  font-weight:600;font-size:24px;line-height:1.3;color:var(--tinta);
+  font-weight:600;font-size:26px;line-height:1.3;color:var(--tinta);
   margin-top:6px;text-wrap:balance;
 }
 .sorpresa-teamo{
   font-family:var(--script);font-style:normal;
-  font-size:34px;color:var(--terracota);margin-top:4px;
+  font-size:37px;color:var(--terracota);margin-top:4px;
 }
 
 /* ══════ Contador ══════ */
 .contador{text-align:center;display:grid;gap:14px;padding:10px 0}
-.contador-pre,.contador-post{font-style:italic;font-weight:500;font-size:22px;color:var(--tinta)}
+.contador-pre,.contador-post{font-style:italic;font-weight:500;font-size:24px;color:var(--tinta)}
 .contador-cifras{display:flex;justify-content:center;gap:34px}
 .cifra{display:grid;gap:4px;justify-items:center}
 .cifra .num{
-  font-weight:600;font-size:48px;line-height:1;color:var(--tinta);
+  font-weight:600;font-size:53px;line-height:1;color:var(--tinta);
   font-variant-numeric:lining-nums tabular-nums;
 }
 .cifra .uni{
-  font-family:var(--serif);font-size:10.5px;font-weight:600;
+  font-family:var(--serif);font-size:12px;font-weight:600;
   letter-spacing:.22em;text-transform:uppercase;color:var(--tinta-suave);
 }
 
@@ -334,9 +352,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* Cierre y firma */
 .cierre{text-align:center;font-style:italic;font-weight:500;font-size:22px;color:var(--tinta);text-wrap:balance}
-.firma{text-align:center;font-family:var(--script);font-size:40px;color:var(--terracota);margin-top:-18px}
+.firma{text-align:center;font-family:var(--script);font-size:44px;color:var(--terracota);margin-top:-18px}
 .pie{
-  text-align:center;font-size:11px;font-weight:600;
+  text-align:center;font-size:12.5px;font-weight:600;
   letter-spacing:.22em;text-transform:uppercase;color:var(--tinta-suave);
   padding-top:8px;
 }
@@ -430,5 +448,5 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @media (max-width:360px){
   .pagina{padding-left:18px;padding-right:18px}
   .contador-cifras{gap:24px}
-  .cifra .num{font-size:42px}
+  .cifra .num{font-size:46px}
 }

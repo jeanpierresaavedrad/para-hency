@@ -198,13 +198,34 @@ $('#btnReproducir').addEventListener('click', function () {
   // Las dos imágenes se bajan ahora, para que el regalo abra sin esperas.
   $('#imgConcierto').src = 'concierto.jpg';
   $('#imgEntrada').src = 'entrada.jpg';
-  // Un respiro para que reconozca la canción antes de ofrecerle el regalo.
+  // Un respiro para que reconozca la canción, y después la cuenta atrás.
   setTimeout(() => {
     const p2 = $('#paso2');
     p2.hidden = false;
     setTimeout(() => p2.classList.add('lista'), 60);
-  }, 2600);
+    cuentaAtras(5);
+  }, 1200);
 });
+
+// Cinco segundos para que le dé tiempo a escuchar la canción antes de abrir el regalo.
+// Con temporizador y no con rAF: si bloquea el celular a media cuenta, rAF se congela
+// y el botón se quedaría bloqueado para siempre.
+function cuentaAtras(segundos) {
+  const btn = $('#btnRegalo');
+  const fin = Date.now() + segundos * 1000;
+  const pinta = () => {
+    const quedan = Math.ceil((fin - Date.now()) / 1000);
+    if (quedan > 0) { btn.textContent = 'Abrir regalo · ' + quedan; return false; }
+    btn.textContent = 'Abrir regalo';
+    btn.disabled = false;
+    btn.classList.add('listo');
+    return true;
+  };
+  pinta();
+  const id = setInterval(() => { if (pinta()) clearInterval(id); }, 200);
+  // Garantía: pase lo que pase, a los N segundos el botón queda abierto.
+  setTimeout(() => { clearInterval(id); pinta(); }, segundos * 1000 + 400);
+}
 
 // PASO 2 -> 3: se abre el regalo.
 $('#btnRegalo').addEventListener('click', function () {
@@ -271,6 +292,8 @@ if (vista) {
     sorpresa.classList.add('sonando');
     const p2 = document.getElementById('paso2');
     p2.hidden = false; p2.classList.add('lista');
+    const bg = document.getElementById('btnRegalo');
+    bg.disabled = false; bg.classList.add('listo');
   }
   if (vista === 'sorpresa') {
     sorpresa.classList.add('abierta');
