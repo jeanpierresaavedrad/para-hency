@@ -180,16 +180,49 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .carta-expande{display:grid;grid-template-rows:0fr}
 .carta.abierta .carta-expande{grid-template-rows:1fr}
 .carta-recorte{overflow:hidden;min-height:0}
+/* La carta es larga (600+ palabras): sale del sobre como una HOJA de papel.
+   Cursiva y dorado servían para tres párrafos; para esto serían ilegibles. */
 .carta-texto{
-  padding:30px 26px 34px;position:relative;z-index:1;
-  display:grid;gap:16px;
-  font-size:17.5px;line-height:1.65;font-weight:500;font-style:italic;
-  color:var(--tinta-media);
+  margin:13px;padding:32px 24px 34px;
+  position:relative;z-index:1;
+  background:linear-gradient(178deg,#FEFCF6 0%,#FBF5E8 100%);
+  border-radius:5px;
+  box-shadow:0 12px 30px -16px rgba(110,75,25,.5), 0 1px 0 rgba(255,255,255,.7) inset;
+  display:grid;gap:17px;
+  font-size:16.5px;line-height:1.72;font-weight:400;font-style:normal;
+  color:#584636;
+  text-wrap:pretty;
   opacity:0;
+}
+.carta-texto .saludo{
+  font-family:var(--script);font-size:31px;line-height:1.15;
+  color:var(--terracota);text-align:center;
+  margin-bottom:4px;overflow-wrap:anywhere;
+}
+/* Las frases sueltas que él dejó solas son un golpe de ritmo: no se tocan,
+   solo se les da aire propio. */
+.carta-texto .suelta{font-weight:500;color:#4F4033}
+/* La cascada de deseos se lee como una lista respirada, no como párrafos aparte. */
+.carta-texto .cascada{margin-bottom:-9px;font-weight:500;color:#4F4033}
+.carta-texto .cascada.fin{margin-bottom:0}
+.carta-texto .tease{
+  text-align:center;font-style:italic;font-size:18px;
+  color:var(--terracota);margin:6px 0 2px;
+}
+.carta-texto .cierre{text-align:center;font-weight:500;font-size:17.5px;color:#4F4033}
+.carta-texto .teamo{
+  text-align:center;font-family:var(--script);font-size:30px;
+  color:var(--terracota);margin-top:2px;
+}
+/* Su 🤍 es un corazón BLANCO sobre papel crema: sin un contorno suave
+   se pierde. Esto le devuelve el filo sin cambiarle el emoji. */
+.carta-texto .tease,
+.carta-texto .teamo{
+  text-shadow:0 0 1px rgba(120,85,45,.30), 0 1px 2px rgba(120,85,45,.16);
 }
 .carta.abierta .carta-texto{opacity:1}
 .carta-pregunta{
-  margin-top:14px;text-align:center;
+  margin-top:18px;text-align:center;font-style:italic;
   font-weight:600;font-size:23px;line-height:1.35;color:#7A5233;
   text-wrap:balance;
 }
