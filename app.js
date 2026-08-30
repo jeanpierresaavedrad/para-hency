@@ -2,6 +2,7 @@
 
 /* ═══════ CONFIGURACIÓN — edita aquí ═══════ */
 const FECHA_INICIO = new Date(2025, 8, 1); // 1 de septiembre de 2025 (mes 8 = septiembre)
+const RETRASO_MUSICA = 4000;               // silencio antes de que entre la canción, en ms
 const FOTOS = [                        // carrusel polaroid
   { src: 'fotos/1.jpg', alt: 'Un beso en el carro' },
   { src: 'fotos/2.jpg', alt: 'En la moto, con los brazos abiertos' },
@@ -25,16 +26,44 @@ const audio = $('#audio');
 const btnMusica = $('#btnMusica');
 let entrado = false;
 
+let arranqueMusica = null;
+
 $('#btnEntrar').addEventListener('click', () => {
   if (entrado) return;
   entrado = true;
-  audio.play().then(() => { btnMusica.hidden = false; setMusica(true); }).catch(() => {});
+
+  // El celular SOLO desbloquea el audio dentro del gesto del usuario. Por eso se
+  // reproduce ya mismo, pero en silencio: si esperáramos los 4 segundos para llamar
+  // a play(), el navegador lo bloquearía y no sonaría nada.
+  audio.volume = 0;
+  audio.play().then(() => {
+    arranqueMusica = setTimeout(() => {
+      arranqueMusica = null;
+      audio.currentTime = 0;          // que entre desde el principio, no 4 s adentro
+      rampaVolumen(audio, 1, 350);    // rampa corta: evita el chasquido, no se come la intro
+      btnMusica.hidden = false;
+      setMusica(true);
+    }, RETRASO_MUSICA);
+  }).catch(() => {});
+
   puerta.classList.add('fuera');
   document.body.classList.add('abierta');
   setTimeout(iniciaReveals, 250);
   armaRedesSorpresa();
   setTimeout(() => puerta.remove(), 900);
 });
+
+// Rampa de volumen con temporizador, nunca con requestAnimationFrame: si ella bloquea
+// el celular a media rampa, rAF se congela y el volumen se queda a medias para siempre.
+function rampaVolumen(el, destino, ms) {
+  const desde = el.volume, t0 = Date.now();
+  const id = setInterval(() => {
+    const k = Math.min((Date.now() - t0) / ms, 1);
+    el.volume = desde + (destino - desde) * k;
+    if (k >= 1) clearInterval(id);
+  }, 30);
+  setTimeout(() => { clearInterval(id); el.volume = destino; }, ms + 300);
+}
 
 /* ═══════ Música ═══════ */
 const avisoVolumen = $('#avisoVolumen');
@@ -53,13 +82,17 @@ cuandoAudio(1, 'loadedmetadata', () => {
   avisoVolumen.hidden = false;
   requestAnimationFrame(() => setTimeout(() => avisoVolumen.classList.add('visible'), 900));
 });
-cuandoAudio(4, 'canplaythrough', () => { btnMusica.hidden = false; });
 audio.addEventListener('error', () => { btnMusica.hidden = true; avisoVolumen.hidden = true; });
 let musicaActiva = audio;   // cambia a la de Los Cafres cuando se abre la sorpresa
 function setMusica(on) { btnMusica.classList.toggle('sonando', on); }
 btnMusica.addEventListener('click', () => {
-  if (musicaActiva.paused) musicaActiva.play().then(() => setMusica(true)).catch(() => {});
-  else { musicaActiva.pause(); setMusica(false); }
+  if (musicaActiva.paused) {
+    if (musicaActiva.volume === 0) musicaActiva.volume = 1;  // por si la pausó en pleno silencio
+    musicaActiva.play().then(() => setMusica(true)).catch(() => {});
+  } else {
+    clearTimeout(arranqueMusica); arranqueMusica = null;     // cancela un arranque pendiente
+    musicaActiva.pause(); setMusica(false);
+  }
 });
 
 /* ═══════ Carrusel polaroid ═══════ */
