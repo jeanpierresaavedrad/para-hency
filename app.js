@@ -2,7 +2,6 @@
 
 /* ═══════ CONFIGURACIÓN — edita aquí ═══════ */
 const FECHA_INICIO = new Date(2025, 8, 1); // 1 de septiembre de 2025 (mes 8 = septiembre)
-const RETRASO_MUSICA = 4000;               // silencio antes de que entre la canción, en ms
 const FOTOS = [                        // carrusel polaroid
   { src: 'fotos/1.jpg', alt: 'Un beso en el carro' },
   { src: 'fotos/2.jpg', alt: 'En la moto, con los brazos abiertos' },
@@ -32,19 +31,10 @@ $('#btnEntrar').addEventListener('click', () => {
   if (entrado) return;
   entrado = true;
 
-  // El celular SOLO desbloquea el audio dentro del gesto del usuario. Por eso se
-  // reproduce ya mismo, pero en silencio: si esperáramos los 4 segundos para llamar
-  // a play(), el navegador lo bloquearía y no sonaría nada.
-  audio.volume = 0;
-  audio.play().then(() => {
-    arranqueMusica = setTimeout(() => {
-      arranqueMusica = null;
-      audio.currentTime = 0;          // que entre desde el principio, no 4 s adentro
-      rampaVolumen(audio, 1, 350);    // rampa corta: evita el chasquido, no se come la intro
-      btnMusica.hidden = false;
-      setMusica(true);
-    }, RETRASO_MUSICA);
-  }).catch(() => {});
+  // Entra de una. El mp3 ya viene recortado al punto donde la canción está cantando,
+  // así que no hace falta esperar ni saltar: suena con cuerpo desde el primer instante.
+  audio.volume = 1;
+  audio.play().then(() => { btnMusica.hidden = false; setMusica(true); }).catch(() => {});
 
   puerta.classList.add('fuera');
   document.body.classList.add('abierta');
@@ -181,63 +171,30 @@ function revelaBotonSorpresa() {
   setTimeout(() => sorpresa.classList.add('lista'), 60);
 }
 
-// Cruce entre canciones: una baja mientras la otra sube. Si el mp3 de Los Cafres
-// todavía no existe, la sorpresa igual se abre y la canción de siempre sigue sonando.
-function cruzaCanciones(ms = 1600) {
-  const vol0 = audio.volume;
-  const cierra = () => { audio.pause(); audio.volume = vol0; audio2.volume = 1; };
+// La segunda canción no se mezcla con la primera: la primera SE PARA y entra la otra.
+// Dos canciones sonando a la vez suenan a error, no a transición.
+function cambiaCancion() {
+  const finPrimera = () => { audio.pause(); audio.volume = 1; };
 
-  audio2.volume = 0;
-  const arranque = audio2.play();
-  if (!arranque) { cierra(); return; }
+  // Baja rápido la primera (350 ms) para que no se corte de golpe, y la para.
+  rampaVolumen(audio, 0, 350);
+  setTimeout(finPrimera, 420);
 
-  arranque.then(() => {
-    musicaActiva = audio2;
-    setMusica(true);
-    const t0 = Date.now();
-    // Con temporizador, no con rAF: si ella bloquea el celular o cambia de app a mitad
-    // del cruce, rAF se congela y quedarían las dos canciones en un estado roto.
-    const id = setInterval(() => {
-      const k = Math.min((Date.now() - t0) / ms, 1);
-      audio.volume = vol0 * (1 - k);
-      audio2.volume = k;
-      if (k >= 1) { clearInterval(id); cierra(); }
-    }, 40);
-    // Garantía final: pase lo que pase, el estado correcto se aplica igual.
-    setTimeout(() => { clearInterval(id); cierra(); }, ms + 500);
-  }).catch(() => { /* sin el mp3, la sorpresa se abre igual y sigue sonando la primera */ });
-}
-
-// Red de seguridad TRIPLE. La sorpresa vive al final de la página y es el regalo:
-// que ella no la vea sería el peor fallo posible. Por eso no se confía en un solo
-// disparador. IntersectionObserver no corre si la pestaña no está componiendo, y el
-// scroll puede desviarse cuando el body lleva overflow recortado.
-function armaRedesSorpresa() {
-  // 1) el observador, cuando llega a la galería
-  if ('IntersectionObserver' in window) {
-    const vigia = new IntersectionObserver(es => {
-      if (es.some(e => e.isIntersecting)) { revelaBotonSorpresa(); vigia.disconnect(); }
-    }, { rootMargin: '0px 0px -20% 0px' });
-    vigia.observe($('#galeria'));
-  }
-  // 2) el scroll en captura, por si el observador no dispara
-  const alBajar = () => {
-    const de = document.documentElement;
-    if (de.scrollTop + de.clientHeight > de.scrollHeight - 900) {
-      revelaBotonSorpresa();
-      document.removeEventListener('scroll', alBajar, { capture: true });
-    }
-  };
-  document.addEventListener('scroll', alBajar, { capture: true, passive: true });
-  // 3) el respaldo de tiempo: pase lo que pase, a los 45 segundos el botón existe
-  setTimeout(revelaBotonSorpresa, 45000);
+  // Y arranca la de Los Cafres justo después, ya sin solaparse.
+  setTimeout(() => {
+    audio2.volume = 1;
+    const arranque = audio2.play();
+    if (arranque) arranque.then(() => { musicaActiva = audio2; setMusica(true); })
+                          .catch(() => { /* sin el mp3, el regalo se abre igual */ });
+    finPrimera();
+  }, 450);
 }
 
 // PASO 1 -> 2: suena Los Cafres y aparece el botón del regalo.
 $('#btnReproducir').addEventListener('click', function () {
   this.disabled = true;
   sorpresa.classList.add('sonando');
-  cruzaCanciones();
+  cambiaCancion();
   // La imagen del concierto se baja ahora, para que el regalo abra sin esperas.
   $('#imgConcierto').src = 'concierto.jpg';
   // Un respiro para que reconozca la canción antes de ofrecerle el regalo.

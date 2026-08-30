@@ -9,7 +9,9 @@ def huella(ruta):
 
 html = io.open('index.html', encoding='utf-8').read()
 cambios = []
-for archivo in ('styles.css', 'app.js'):
+# Los mp3 tambien: cambiaron de contenido con el mismo nombre, y sin sello
+# un visitante que ya estuvo aqui se queda con la version vieja de la cancion.
+for archivo in ('styles.css', 'app.js', 'cancion.mp3', 'cafres.mp3'):
     h = huella(archivo)
     patron = re.compile(r'(["\'])' + re.escape(archivo) + r'(?:\?v=[0-9a-f]+)?\1')
     html, n = patron.subn(lambda m: f'{m.group(1)}{archivo}?v={h}{m.group(1)}', html)

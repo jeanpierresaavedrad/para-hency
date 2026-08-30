@@ -16,6 +16,7 @@
   --lacre:      #9C2721;
   --lacre-2:    #6E1411;
   --linea:      #DCC9AC;
+  --celeste:    #6FB4D8;   /* su color */
   --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --script:'Great Vibes', 'Segoe Script', cursive;
   --curva-salida:cubic-bezier(.22,1,.36,1);
@@ -214,11 +215,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   text-align:center;font-family:var(--script);font-size:30px;
   color:var(--terracota);margin-top:2px;
 }
-/* Su 🤍 es un corazón BLANCO sobre papel crema: sin un contorno suave
-   se pierde. Esto le devuelve el filo sin cambiarle el emoji. */
-.carta-texto .tease,
-.carta-texto .teamo{
-  text-shadow:0 0 1px rgba(120,85,45,.30), 0 1px 2px rgba(120,85,45,.16);
+/* Los corazones van en SU color. Se dibujan con un ♥ de texto y no con el emoji 🤍:
+   el emoji sale blanco, se pierde sobre el papel crema y cada celular lo pinta distinto. */
+.carta-texto .celeste{
+  color:var(--celeste);
+  font-style:normal;
+  font-size:.86em;
+  vertical-align:.06em;
+  text-shadow:0 1px 1px rgba(40,90,120,.18);
 }
 .carta.abierta .carta-texto{opacity:1}
 .carta-pregunta{
