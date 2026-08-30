@@ -203,11 +203,11 @@ $('#btnReproducir').addEventListener('click', function () {
     const p2 = $('#paso2');
     p2.hidden = false;
     setTimeout(() => p2.classList.add('lista'), 60);
-    cuentaAtras(5);
+    cuentaAtras(10);
   }, 1200);
 });
 
-// Cinco segundos para que le dé tiempo a escuchar la canción antes de abrir el regalo.
+// Diez segundos para que le dé tiempo a escuchar la canción antes de abrir el regalo.
 // Con temporizador y no con rAF: si bloquea el celular a media cuenta, rAF se congela
 // y el botón se quedaría bloqueado para siempre.
 function cuentaAtras(segundos) {
