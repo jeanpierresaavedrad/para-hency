@@ -16,7 +16,8 @@
   --lacre:      #9C2721;
   --lacre-2:    #6E1411;
   --linea:      #DCC9AC;
-  --celeste:    #6FB4D8;   /* su color */
+  --celeste:    #6FB4D8;   /* su color, sobre fondo claro */
+  --celeste-luz:#A8D8EF;   /* el mismo, aclarado para el botón terracota */
   --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --script:'Great Vibes', 'Segoe Script', cursive;
   --curva-salida:cubic-bezier(.22,1,.36,1);
@@ -73,7 +74,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   color:#FBF1E4;font-style:italic;font-weight:600;font-size:19px;letter-spacing:.02em;
   box-shadow:0 12px 26px -12px rgba(143,78,51,.6), inset 0 1px 0 rgba(255,240,220,.28);
 }
-.btn-pill .cora{font-style:normal}
+/* El corazón del botón va en SU celeste. Sobre el terracota hace falta el tono
+   aclarado (el del papel daría 1.8:1 y se vería sucio) más una sombra que lo despegue. */
+.btn-pill .cora{
+  font-style:normal;
+  color:var(--celeste-luz);
+  text-shadow:0 1px 2px rgba(70,35,20,.45);
+}
 
 /* ══════ Contenido ══════ */
 .pagina{
@@ -252,7 +259,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .sabia{
   font-family:var(--script);font-size:31px;line-height:1.2;color:var(--terracota);
 }
-.sabia .cora{font-family:var(--serif);font-size:22px;vertical-align:2px}
+.sabia .cora{font-family:var(--serif);font-size:22px;vertical-align:2px;color:var(--celeste)}
 .algo-mas{
   font-style:italic;font-weight:500;font-size:21px;color:var(--tinta);
   text-wrap:balance;margin-top:-4px;

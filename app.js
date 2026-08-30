@@ -195,8 +195,9 @@ $('#btnReproducir').addEventListener('click', function () {
   this.disabled = true;
   sorpresa.classList.add('sonando');
   cambiaCancion();
-  // La imagen del concierto se baja ahora, para que el regalo abra sin esperas.
+  // Las dos imágenes se bajan ahora, para que el regalo abra sin esperas.
   $('#imgConcierto').src = 'concierto.jpg';
+  $('#imgEntrada').src = 'entrada.jpg';
   // Un respiro para que reconozca la canción antes de ofrecerle el regalo.
   setTimeout(() => {
     const p2 = $('#paso2');
@@ -274,6 +275,7 @@ if (vista) {
   if (vista === 'sorpresa') {
     sorpresa.classList.add('abierta');
     document.getElementById('imgConcierto').src = 'concierto.jpg';
+    document.getElementById('imgEntrada').src = 'entrada.jpg';
   }
 }
 
